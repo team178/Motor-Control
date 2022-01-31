@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX; 
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -27,10 +27,10 @@ public class Robot extends TimedRobot {
   private static final int kMotorPort4 = 0;
   private static final int kJoystickPort = 0;
 
-  private VictorSPX m_motor1;
-  private VictorSPX m_motor2;
-  private VictorSPX m_motor3;
-  private VictorSPX m_motor4;
+  private TalonSRX m_motor1;
+  private TalonSRX m_motor2;
+  private TalonSRX m_motor3;
+  private TalonSRX m_motor4;
 
   private ConsoleController m_joystick;
 
@@ -106,10 +106,10 @@ public class Robot extends TimedRobot {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
 
-    m_motor1 = new VictorSPX(kMotorPort1);
-    m_motor2 = new VictorSPX(kMotorPort2);
-    m_motor3 = new VictorSPX(kMotorPort3);
-    m_motor4 = new VictorSPX(kMotorPort4);
+    m_motor1 = new TalonSRX(kMotorPort1);
+    m_motor2 = new TalonSRX(kMotorPort2);
+    m_motor3 = new TalonSRX(kMotorPort3);
+    m_motor4 = new TalonSRX(kMotorPort4);
     
     m_joystick = new ConsoleController(kJoystickPort);
 
