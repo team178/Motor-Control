@@ -4,10 +4,12 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
+import libs.IO.ConsoleController; 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 /**
@@ -25,17 +27,16 @@ public class Robot extends TimedRobot {
   private static final int kMotorPort4 = 0;
   private static final int kJoystickPort = 0;
 
-  private VictorSPX m_motor;
-  private Joystick m_joystick;
-
-
-  
-  private Command m_autonomousCommand;
-
-  private RobotContainer m_robotContainer;
+  private VictorSPX m_motor1;
   private VictorSPX m_motor2;
   private VictorSPX m_motor3;
   private VictorSPX m_motor4;
+
+  private ConsoleController m_joystick;
+
+  private Command m_autonomousCommand;
+
+  private RobotContainer m_robotContainer;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -45,12 +46,6 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    m_motor = new VictorSPX(kMotorPort1);
-    m_motor2 = new VictorSPX(kMotorPort2);
-    m_motor3 = new VictorSPX(kMotorPort3);
-    m_motor4 = new VictorSPX(kMotorPort4);
-    m_joystick = new Joystick(kJoystickPort);
-    m_robotContainer = new RobotContainer();
   }
 
   /**
@@ -110,14 +105,42 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+
+    m_motor1 = new VictorSPX(kMotorPort1);
+    m_motor2 = new VictorSPX(kMotorPort2);
+    m_motor3 = new VictorSPX(kMotorPort3);
+    m_motor4 = new VictorSPX(kMotorPort4);
+    
+    m_joystick = new ConsoleController(kJoystickPort);
+
+    m_robotContainer = new RobotContainer();
+
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-  m_motor.set(null, m_joystick.getY());
-  m_motor2.set(null, m_joystick.getY());
-  m_motor3.set(null, m_joystick.getY());
-  m_motor4.set(null, m_joystick.getY());
+
+    int motorControlOption = 1;
+
+    if(motorControlOption == 1){
+      m_motor1.set(ControlMode.PercentOutput, m_joystick.getLeftStickY());
+    }
+    else if(motorControlOption == 2){
+      m_motor2.set(ControlMode.PercentOutput, m_joystick.getLeftStickY());
+    }
+    else if(motorControlOption == 3){
+      m_motor3.set(ControlMode.PercentOutput, m_joystick.getLeftStickY());
+    }
+    else if(motorControlOption == 4){
+      m_motor4.set(ControlMode.PercentOutput, m_joystick.getLeftStickY());
+    }
+    else if(motorControlOption == 5){
+      m_motor1.set(ControlMode.PercentOutput, m_joystick.getLeftStickY());
+      m_motor2.set(ControlMode.PercentOutput, m_joystick.getLeftStickY());
+      m_motor3.set(ControlMode.PercentOutput, m_joystick.getLeftStickY());
+      m_motor4.set(ControlMode.PercentOutput, m_joystick.getLeftStickY());
+    }
+
   }
 }
