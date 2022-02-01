@@ -121,21 +121,15 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
 
-    int motorControlOption = 1;
+    int motorControlOption = 0;
 
-    if(motorControlOption == 1){
+    if(motorControlOption == 0){
       m_motor1.set(ControlMode.PercentOutput, m_joystick.getLeftStickY());
+      m_motor2.set(ControlMode.PercentOutput, m_joystick.getLeftStickX());
+      m_motor3.set(ControlMode.PercentOutput, m_joystick.getRightStickY());
+      m_motor4.set(ControlMode.PercentOutput, m_joystick.getRightStickX());
     }
-    else if(motorControlOption == 2){
-      m_motor2.set(ControlMode.PercentOutput, m_joystick.getLeftStickY());
-    }
-    else if(motorControlOption == 3){
-      m_motor3.set(ControlMode.PercentOutput, m_joystick.getLeftStickY());
-    }
-    else if(motorControlOption == 4){
-      m_motor4.set(ControlMode.PercentOutput, m_joystick.getLeftStickY());
-    }
-    else if(motorControlOption == 5){
+    else if(motorControlOption == 1){
       m_motor1.set(ControlMode.PercentOutput, m_joystick.getLeftStickY());
       m_motor2.set(ControlMode.PercentOutput, m_joystick.getLeftStickY());
       m_motor3.set(ControlMode.PercentOutput, m_joystick.getLeftStickY());
