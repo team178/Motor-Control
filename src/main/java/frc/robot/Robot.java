@@ -6,6 +6,8 @@ package frc.robot;
 
 import libs.IO.ConsoleController;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,15 +23,15 @@ public class Robot extends TimedRobot {
 
 
   private static final int kMotorPort1 = 0;
-  private static final int kMotorPort2= 0;
+  private static final int kMotorPort2 = 0;
   private static final int kMotorPort3 = 0;
   private static final int kMotorPort4 = 0;
   private static final int kJoystickPort = 0;
 
-  private Talon m_motor1;
-  private Talon m_motor2;
-  private Talon m_motor3;
-  private Talon m_motor4;
+  private WPI_TalonSRX m_motor1;
+  private WPI_TalonSRX m_motor2;
+  private WPI_TalonSRX m_motor3;
+  private WPI_TalonSRX m_motor4;
 
   private ConsoleController m_joystick;
 
@@ -105,10 +107,10 @@ public class Robot extends TimedRobot {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
 
-    m_motor1 = new Talon(kMotorPort1);
-    m_motor2 = new Talon(kMotorPort2);
-    m_motor3 = new Talon(kMotorPort3);
-    m_motor4 = new Talon(kMotorPort4);
+    m_motor1 = new WPI_TalonSRX(kMotorPort1);
+    m_motor2 = new WPI_TalonSRX(kMotorPort2);
+    m_motor3 = new WPI_TalonSRX(kMotorPort3);
+    m_motor4 = new WPI_TalonSRX(kMotorPort4);
     
     m_joystick = new ConsoleController(kJoystickPort);
 
