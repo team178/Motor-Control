@@ -9,7 +9,6 @@ import libs.IO.ConsoleController;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -21,11 +20,12 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
 
+  //might need to change the port numbers, guessed these numbers
+  private static final int kMotorPort1 = 1;
+  private static final int kMotorPort2 = 2;
+  private static final int kMotorPort3 = 3;
+  private static final int kMotorPort4 = 4;
 
-  private static final int kMotorPort1 = 0;
-  private static final int kMotorPort2 = 0;
-  private static final int kMotorPort3 = 0;
-  private static final int kMotorPort4 = 0;
   private static final int kJoystickPort = 0;
 
   private WPI_TalonSRX m_motor1;
