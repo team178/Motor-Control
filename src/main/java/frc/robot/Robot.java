@@ -129,12 +129,19 @@ public class Robot extends TimedRobot {
       m_motor2.set(m_joystick.getRightStickY());
 
       // Uses triggers, use bumpers to toggle direction
-      m_motor3.set(m_joystick.getLeftTrigger() * (ConsoleController.controller.getRawButton(5) ? -1 : 1));
+
+      // Temporary speed limiting
+      double leftTrig = m_joystick.getLeftTrigger();
+
+      if (leftTrig > 0.3)
+        leftTrig = 0.3;
+
+      m_motor3.set(leftTrig * (ConsoleController.controller.getRawButton(5) ? -1 : 1));
       m_motor4.set(m_joystick.getRightTrigger() * (ConsoleController.controller.getRawButton(6) ? -1 : 1));
     }
     else if(motorControlOption == 1){
       m_motor1.set(m_joystick.getLeftStickY());
-      m_motor2.set(m_joystick.getLeftStickY());
+      m_motor2.set(-m_joystick.getLeftStickY()); //! Inverted for use in shooter motor
       m_motor3.set(m_joystick.getLeftStickY());
       m_motor4.set(m_joystick.getLeftStickY());
     }
