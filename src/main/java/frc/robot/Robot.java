@@ -6,9 +6,18 @@ package frc.robot;
 
 import libs.IO.ConsoleController;
 
+import java.util.Map;
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -37,6 +46,16 @@ public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
 
+  private SendableChooser<DoubleSupplier> m_motor1_axis = new SendableChooser<>();
+  private SendableChooser<DoubleSupplier> m_motor2_axis = new SendableChooser<>();
+  private SendableChooser<DoubleSupplier> m_motor3_axis = new SendableChooser<>();
+  private SendableChooser<DoubleSupplier> m_motor4_axis = new SendableChooser<>();
+
+  private NetworkTableEntry m_motor1_speed;
+  private NetworkTableEntry m_motor2_speed;
+  private NetworkTableEntry m_motor3_speed;
+  private NetworkTableEntry m_motor4_speed;
+
   private RobotContainer m_robotContainer;
 
   /**
@@ -47,6 +66,105 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+    
+    m_motor1 = new WPI_TalonSRX(kMotorPort1);
+    m_motor2 = new WPI_TalonSRX(kMotorPort2);
+    m_motor3 = new WPI_TalonSRX(kMotorPort3);
+    m_motor4 = new WPI_TalonSRX(kMotorPort4);
+    
+    m_joystick = new ConsoleController(kJoystickPort);
+
+    // Don't need a robot container
+    // m_robotContainer = new RobotContainer();
+
+    // Shuffleboard Motor control pickers
+
+    ShuffleboardTab motorControlTab = Shuffleboard.getTab("Motor Control");
+
+
+    m_motor1_axis.setDefaultOption("None", () -> 0.0);
+    m_motor1_axis.addOption("Left Stick X", m_joystick::getLeftStickX);
+    m_motor1_axis.addOption("Left Stick Y", m_joystick::getLeftStickY);
+    m_motor1_axis.addOption("Right Stick X", m_joystick::getRightStickX);
+    m_motor1_axis.addOption("Right Stick Y", m_joystick::getRightStickY);
+    m_motor1_axis.addOption("Left Trigger", m_joystick::getLeftTrigger);
+    m_motor1_axis.addOption("Right Trigger", m_joystick::getRightTrigger);
+
+    motorControlTab
+    .add("Motor 1", m_motor1_axis)
+      .withSize(2, 1)
+        .withPosition(0, 0);
+
+    m_motor1_speed = motorControlTab
+    .add("Max Speed for Motor 1", 1)
+      .withWidget(BuiltInWidgets.kNumberSlider)
+        .withProperties(Map.of("min", -1, "max", 1))
+          .withPosition(0, 1)
+            .withSize(2, 1)
+              .getEntry();
+
+    m_motor2_axis.setDefaultOption("None", () -> 0.0);
+    m_motor2_axis.addOption("Left Stick Y", m_joystick::getLeftStickY);
+    m_motor2_axis.addOption("Left Stick X", m_joystick::getLeftStickX);
+    m_motor2_axis.addOption("Right Stick X", m_joystick::getRightStickX);
+    m_motor2_axis.addOption("Right Stick Y", m_joystick::getRightStickY);
+    m_motor2_axis.addOption("Left Trigger", m_joystick::getLeftTrigger);
+    m_motor2_axis.addOption("Right Trigger", m_joystick::getRightTrigger);
+
+    motorControlTab
+    .add("Motor 2", m_motor2_axis)
+      .withSize(2, 1)
+        .withPosition(2, 0);
+
+    m_motor2_speed = motorControlTab
+    .add("Max Speed for Motor 2", 1)
+      .withWidget(BuiltInWidgets.kNumberSlider)
+        .withProperties(Map.of("min", -1, "max", 1))
+          .withPosition(2, 1)
+            .withSize(2, 1)
+             .getEntry();
+
+    m_motor3_axis.setDefaultOption("None", () -> 0.0);
+    m_motor3_axis.addOption("Left Stick X", m_joystick::getLeftStickX);
+    m_motor3_axis.addOption("Left Stick Y", m_joystick::getLeftStickY);
+    m_motor3_axis.addOption("Right Stick X", m_joystick::getRightStickX);
+    m_motor3_axis.addOption("Right Stick Y", m_joystick::getRightStickY);
+    m_motor3_axis.addOption("Left Trigger", m_joystick::getLeftTrigger);
+    m_motor3_axis.addOption("Right Trigger", m_joystick::getRightTrigger);
+
+    motorControlTab
+    .add("Motor 3", m_motor3_axis)
+      .withSize(2, 1)
+        .withPosition(4, 0);
+
+    m_motor3_speed = motorControlTab
+    .add("Max Speed for Motor 3", 1)
+      .withWidget(BuiltInWidgets.kNumberSlider)
+        .withProperties(Map.of("min", -1, "max", 1))
+          .withPosition(4, 1)
+            .withSize(2, 1)
+              .getEntry();
+
+    m_motor4_axis.setDefaultOption("None", () -> 0.0);
+    m_motor4_axis.addOption("Left Stick X", m_joystick::getLeftStickX);
+    m_motor4_axis.addOption("Left Stick Y", m_joystick::getLeftStickY);
+    m_motor4_axis.addOption("Right Stick X", m_joystick::getRightStickX);
+    m_motor4_axis.addOption("Right Stick Y", m_joystick::getRightStickY);
+    m_motor4_axis.addOption("Left Trigger", m_joystick::getLeftTrigger);
+    m_motor4_axis.addOption("Right Trigger", m_joystick::getRightTrigger);
+
+    motorControlTab
+    .add("Motor 4", m_motor4_axis)
+      .withSize(2, 1)
+        .withPosition(6, 0);
+
+    m_motor4_speed = motorControlTab
+    .add("Max Speed for Motor 4", 1)
+      .withWidget(BuiltInWidgets.kNumberSlider)
+        .withProperties(Map.of("min", -1, "max", 1))
+          .withPosition(6, 1)
+            .withSize(2, 1)
+              .getEntry();
   }
 
   /**
@@ -106,45 +224,14 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
-
-    m_motor1 = new WPI_TalonSRX(kMotorPort1);
-    m_motor2 = new WPI_TalonSRX(kMotorPort2);
-    m_motor3 = new WPI_TalonSRX(kMotorPort3);
-    m_motor4 = new WPI_TalonSRX(kMotorPort4);
-    
-    m_joystick = new ConsoleController(kJoystickPort);
-
-    m_robotContainer = new RobotContainer();
-
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-
-    int motorControlOption = 0;
-
-    if(motorControlOption == 0){
-      m_motor1.set(m_joystick.getLeftStickY());
-      m_motor2.set(m_joystick.getRightStickY());
-
-      // Uses triggers, use bumpers to toggle direction
-
-      // Temporary speed limiting
-      double leftTrig = m_joystick.getLeftTrigger();
-
-      if (leftTrig > 0.3)
-        leftTrig = 0.3;
-
-      m_motor3.set(leftTrig * (ConsoleController.controller.getRawButton(5) ? -1 : 1));
-      m_motor4.set(m_joystick.getRightTrigger() * (ConsoleController.controller.getRawButton(6) ? -1 : 1));
-    }
-    else if(motorControlOption == 1){
-      m_motor1.set(m_joystick.getLeftStickY());
-      m_motor2.set(-m_joystick.getLeftStickY()); //! Inverted for use in shooter motor
-      m_motor3.set(m_joystick.getLeftStickY());
-      m_motor4.set(m_joystick.getLeftStickY());
-    }
-
+    m_motor1.set(m_motor1_axis.getSelected().getAsDouble() * m_motor1_speed.getDouble(1.0));
+    m_motor2.set(m_motor2_axis.getSelected().getAsDouble() * m_motor2_speed.getDouble(1.0));
+    m_motor3.set(m_motor3_axis.getSelected().getAsDouble() * m_motor3_speed.getDouble(1.0));
+    m_motor4.set(m_motor4_axis.getSelected().getAsDouble() * m_motor4_speed.getDouble(1.0));
   }
 }
