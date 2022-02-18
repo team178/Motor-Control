@@ -11,6 +11,9 @@ import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -41,6 +44,8 @@ public class Robot extends TimedRobot {
   private WPI_TalonSRX m_motor2;
   private WPI_TalonSRX m_motor3;
   private WPI_TalonSRX m_motor4;
+  
+  private CANSparkMax m_motor5;
 
   private ConsoleController m_joystick;
 
@@ -51,10 +56,14 @@ public class Robot extends TimedRobot {
   private SendableChooser<DoubleSupplier> m_motor3_axis = new SendableChooser<>();
   private SendableChooser<DoubleSupplier> m_motor4_axis = new SendableChooser<>();
 
+  private SendableChooser<DoubleSupplier> m_motor5_axis = new SendableChooser<>();
+
   private NetworkTableEntry m_motor1_speed;
   private NetworkTableEntry m_motor2_speed;
   private NetworkTableEntry m_motor3_speed;
   private NetworkTableEntry m_motor4_speed;
+
+  private NetworkTableEntry m_motor5_speed;
 
   private RobotContainer m_robotContainer;
 
@@ -71,6 +80,8 @@ public class Robot extends TimedRobot {
     m_motor2 = new WPI_TalonSRX(kMotorPort2);
     m_motor3 = new WPI_TalonSRX(kMotorPort3);
     m_motor4 = new WPI_TalonSRX(kMotorPort4);
+
+    m_motor5 = new CANSparkMax(5, MotorType.kBrushless);
     
     m_joystick = new ConsoleController(kJoystickPort);
 
@@ -165,7 +176,29 @@ public class Robot extends TimedRobot {
           .withPosition(6, 1)
             .withSize(2, 1)
               .getEntry();
+              
+    m_motor5_axis.setDefaultOption("None", () -> 0.0);
+    m_motor5_axis.addOption("Left Stick X", m_joystick::getLeftStickX);
+    m_motor5_axis.addOption("Left Stick Y", m_joystick::getLeftStickY);
+    m_motor5_axis.addOption("Right Stick X", m_joystick::getRightStickX);
+    m_motor5_axis.addOption("Right Stick Y", m_joystick::getRightStickY);
+    m_motor5_axis.addOption("Left Trigger", m_joystick::getLeftTrigger);
+    m_motor5_axis.addOption("Right Trigger", m_joystick::getRightTrigger);
+
+    motorControlTab
+    .add("Motor 5 (SparkMAX)", m_motor5_axis)
+      .withSize(2, 1)
+        .withPosition(8, 0);
+
+    m_motor5_speed = motorControlTab
+    .add("Max Speed for Motor 5 (SparkMAX)", 1)
+      .withWidget(BuiltInWidgets.kNumberSlider)
+        .withProperties(Map.of("min", -1, "max", 1))
+          .withPosition(8, 1)
+            .withSize(2, 1)
+              .getEntry();
   }
+
 
   /**
    * This function is called every robot packet, no matter the mode. Use this for items like
@@ -233,5 +266,7 @@ public class Robot extends TimedRobot {
     m_motor2.set(m_motor2_axis.getSelected().getAsDouble() * m_motor2_speed.getDouble(1.0));
     m_motor3.set(m_motor3_axis.getSelected().getAsDouble() * m_motor3_speed.getDouble(1.0));
     m_motor4.set(m_motor4_axis.getSelected().getAsDouble() * m_motor4_speed.getDouble(1.0));
+
+    m_motor5.set(m_motor5_axis.getSelected().getAsDouble() * m_motor5_speed.getDouble(1.0));
   }
 }
